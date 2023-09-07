@@ -14,7 +14,9 @@ public class RabbitmqPublisherApplication {
 
 		PublishService publishService = configurableApplicationContext.getBean(PublishService.class);
 
-		publishService.send("Hello everybody!");
+		publishService.send("12345 Rice 20kg");
+		publishService.send("23456 Millet 20kg");
+		publishService.send("34567 Lentils 20kg");
 	}
 
 }

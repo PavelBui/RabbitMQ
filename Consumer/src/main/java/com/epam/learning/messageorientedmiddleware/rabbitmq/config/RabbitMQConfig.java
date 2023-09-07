@@ -8,12 +8,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-//    @Value("${spring.rabbitmq.consumer-queue}")
-//    private String consumerQueue;
-//
-//    @Bean
-//    public Queue consumerQueue() {
-//        return new Queue(consumerQueue);
-//    }
+    @Value("${spring.rabbitmq.failed-message-queue}")
+    private String failedMessageQueue;
+
+    @Bean
+    public Queue failedMessageQueue() {
+        return new Queue(failedMessageQueue);
+    }
 
 }
