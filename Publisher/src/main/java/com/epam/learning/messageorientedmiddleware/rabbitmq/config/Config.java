@@ -8,6 +8,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 public class Config {
 
@@ -17,19 +20,36 @@ public class Config {
     @Value("${spring.rabbitmq.consumer-queue-second}")
     private String consumerQueueSecond;
 
+    @Value("${spring.rabbitmq.dead-letter-queue}")
+    private String deadLetterQueue;
+
     @Bean
-    public FanoutExchange fanout() {
+    public FanoutExchange fanoutExchange() {
         return new FanoutExchange("customer.fanout");
     }
 
     @Bean
+    public DirectExchange directExchange() {
+        return new DirectExchange(deadLetterQueue);
+    }
+
+    @Bean
+    public Queue deadLetterQueue() {
+        return new Queue(deadLetterQueue);
+    }
+
+    @Bean
     public Queue consumerQueueFirst() {
-        return new Queue(consumerQueueFirst);
+        Map<String, Object> args = new HashMap();
+        args.put("x-dead-letter-exchange", deadLetterQueue);
+        return new Queue(consumerQueueFirst, false, false, false, args);
     }
 
     @Bean
     public Queue consumerQueueSecond() {
-        return new Queue(consumerQueueSecond);
+        Map<String, Object> args = new HashMap();
+        args.put("x-dead-letter-exchange", deadLetterQueue);
+        return new Queue(consumerQueueSecond, false, false, false, args);
     }
 
     @Bean
