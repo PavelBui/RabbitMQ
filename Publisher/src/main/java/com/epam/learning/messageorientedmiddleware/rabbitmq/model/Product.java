@@ -68,7 +68,7 @@ public class Product {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", value='" + value + '\'' +
-                ", status='" + status +
+                ", status='" + status + '\'' +
                 '}';
     }
 

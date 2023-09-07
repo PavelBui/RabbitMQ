@@ -20,10 +20,12 @@ public class ConsumerService {
     @Autowired
     private RabbitTemplate template;
 
-    private static Map<Long, ProductMessagesValidator> productMessagesValidatorMap = new HashMap<>();
+    private static final Map<Long, ProductMessagesValidator> productMessagesValidatorMap = new HashMap<>();
     {
         productMessagesValidatorMap.put(0L, new ProductMessagesValidator(null, null));
     }
+
+    private static boolean failedMessageCreate = false;
 
     @RabbitListener(queues = "${spring.rabbitmq.consumer-queue-first}")
     public void receiveFirst(String in) {
@@ -44,6 +46,11 @@ public class ConsumerService {
         ProductMessage productMessage = createProductMessage(in);
         Long productId = productMessage.getId();
         if (productMessagesValidatorMap.containsKey(productId)) {
+            //!!Forcibly fail one of the messages!!
+            if (!failedMessageCreate && productId == 3L) {
+                productMessage.setValue("1kg");
+                failedMessageCreate = true;
+            }
             productMessagesValidatorMap.get(productId).setProductMessageSecond(productMessage);
             analyzeMessages(productId);
         } else {
@@ -62,12 +69,13 @@ public class ConsumerService {
         ProductMessage productMessageFirst = productMessagesValidator.getProductMessageFirst();
         ProductMessage productMessageSecond = productMessagesValidator.getProductMessageSecond();
         if (productMessageFirst.equals(productMessageSecond)) {
-            String message = productId.toString() + " " + productMessageFirst.getName() + " = " + productMessageSecond.getName() + " and " + productMessageFirst.getValue() + " = " + productMessageSecond.getValue();
-            this.template.convertAndSend(failedMessageQueue.getName(), message);
-            System.out.println("Sent '" + message + "'");
+            System.out.println("Client received success message '" + productMessageFirst + "'");
         } else {
-            //Something about bad acknowledgment
+            String message = productId.toString();
+            this.template.convertAndSend(failedMessageQueue.getName(), message);
+            System.out.println("Sent to failed message queue '" + message + "'");
         }
+        productMessagesValidatorMap.remove(productId);
     }
 
 }

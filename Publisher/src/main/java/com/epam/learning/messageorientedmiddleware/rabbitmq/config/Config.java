@@ -51,7 +51,7 @@ public class Config {
                     new Product(null,
                             "Rice",
                             "20kg",
-                            "Ready"
+                            "Archived"
                     )
             );
             System.out.println("Preloading " + product1);
@@ -59,7 +59,7 @@ public class Config {
                     new Product(null,
                             "Buckwheat",
                             "10kg",
-                            "Ready"
+                            "Archived"
                     )
             );
             System.out.println("Preloading " + product2);
@@ -67,7 +67,7 @@ public class Config {
                     new Product(null,
                             "Oatmeal",
                             "15kg",
-                            "Ready"
+                            "Archived"
                     )
             );
             System.out.println("Preloading " + product3);
@@ -75,7 +75,7 @@ public class Config {
                     new Product(null,
                             "Millet",
                             "5kg",
-                            "Ready"
+                            "Archived"
                     )
             );
             System.out.println("Preloading " + product4);
@@ -83,7 +83,7 @@ public class Config {
                     new Product(null,
                             "Lentils",
                             "10kg",
-                            "Ready"
+                            "Archived"
                     )
             );
             System.out.println("Preloading " + product5);

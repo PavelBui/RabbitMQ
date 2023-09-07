@@ -1,4 +1,4 @@
-package com.epam.learning.messageorientedmiddleware.rabbitmq.service;
+package com.epam.learning.messageorientedmiddleware.rabbitmq.service.impl;
 
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
