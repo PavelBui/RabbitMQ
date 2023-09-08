@@ -15,18 +15,18 @@ public class Product {
     @Column(name = "productName")
     private String name;
 
-    @Column(name = "productValue")
-    private String value;
+    @Column(name = "productWeight")
+    private int weight;
 
     @Column(name = "productStatus")
     private String status;
 
     public Product() {}
 
-    public Product(Long id, String name, String value, String status) {
+    public Product(Long id, String name, int weight, String status) {
         this.id = id;
         this.name = name;
-        this.value = value;
+        this.weight = weight;
         this.status = status;
     }
 
@@ -46,12 +46,12 @@ public class Product {
         this.name = name;
     }
 
-    public String getValue() {
-        return value;
+    public int getWeight() {
+        return weight;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setWeight(int weight) {
+        this.weight = weight;
     }
 
     public String getStatus() {
@@ -67,7 +67,7 @@ public class Product {
         return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", value='" + value + '\'' +
+                ", weight='" + weight + '\'' +
                 ", status='" + status + '\'' +
                 '}';
     }
@@ -77,12 +77,12 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id.equals(product.id) && name.equals(product.name) && value.equals(product.value) && status.equals(product.status);
+        return id.equals(product.id) && name.equals(product.name) && weight == product.weight && status.equals(product.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, value, status);
+        return Objects.hash(id, name, weight, status);
     }
 
 }

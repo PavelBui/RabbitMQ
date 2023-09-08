@@ -2,28 +2,29 @@ package com.epam.learning.messageorientedmiddleware.rabbitmq.bean;
 
 public class ProductMessagesValidator {
 
-    private ProductMessage productMessageFirst;
-    private ProductMessage productMessageSecond;
+    private ProductMessage productMessage;
 
-    public ProductMessagesValidator(ProductMessage productMessageFirst, ProductMessage productMessageSecond) {
-        this.productMessageFirst = productMessageFirst;
-        this.productMessageSecond = productMessageSecond;
+    private int attemptsNumber;
+
+    public ProductMessagesValidator(ProductMessage productMessage) {
+        this.productMessage = productMessage;
+        this.attemptsNumber = 0;
     }
 
-    public ProductMessage getProductMessageFirst() {
-        return productMessageFirst;
+    public ProductMessage getProductMessage() {
+        return productMessage;
     }
 
-    public void setProductMessageFirst(ProductMessage productMessageFirst) {
-        this.productMessageFirst = productMessageFirst;
+    public void setProductMessage(ProductMessage productMessage) {
+        this.productMessage = productMessage;
     }
 
-    public ProductMessage getProductMessageSecond() {
-        return productMessageSecond;
+    public int getAttemptsNumber() {
+        return attemptsNumber;
     }
 
-    public void setProductMessageSecond(ProductMessage productMessageSecond) {
-        this.productMessageSecond = productMessageSecond;
+    public int increaseAttemptsNumber() {
+        return ++attemptsNumber;
     }
 
 }

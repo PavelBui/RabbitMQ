@@ -6,16 +6,16 @@ public class ProductRequestDto {
 
     private String name;
 
-    private String value;
+    private String weight;
 
     private String status;
 
     public ProductRequestDto() {}
 
-    public ProductRequestDto(Long id, String name, String value, String status) {
+    public ProductRequestDto(Long id, String name, String weight, String status) {
         this.id = id;
         this.name = name;
-        this.value = value;
+        this.weight = weight;
         this.status = status;
     }
 
@@ -35,12 +35,12 @@ public class ProductRequestDto {
         this.name = name;
     }
 
-    public String getValue() {
-        return value;
+    public String getWeight() {
+        return weight;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setWeight(String weight) {
+        this.weight = weight;
     }
 
     public String getStatus() {

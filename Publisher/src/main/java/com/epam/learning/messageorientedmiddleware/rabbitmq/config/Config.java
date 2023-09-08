@@ -3,6 +3,10 @@ package com.epam.learning.messageorientedmiddleware.rabbitmq.config;
 import com.epam.learning.messageorientedmiddleware.rabbitmq.model.Product;
 import com.epam.learning.messageorientedmiddleware.rabbitmq.repository.ProductRepository;
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -23,14 +27,40 @@ public class Config {
     @Value("${spring.rabbitmq.dead-letter-queue}")
     private String deadLetterQueue;
 
+    @Bean("rabbitListenerContainerFactory")
+    public RabbitListenerContainerFactory<?> rabbitFactory (ConnectionFactory connectionFactory) {
+        var factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setMessageConverter(new Jackson2JsonMessageConverter());
+        return factory;
+    }
+
     @Bean
-    public FanoutExchange fanoutExchange() {
-        return new FanoutExchange("customer.fanout");
+    public TopicExchange topicExchange() {
+        return new TopicExchange("customer.topic");
     }
 
     @Bean
     public DirectExchange directExchange() {
         return new DirectExchange(deadLetterQueue);
+    }
+
+    @Bean
+    public Binding bindingFirst(TopicExchange topicExchange,
+                                Queue consumerQueueFirst) {
+        return BindingBuilder
+                .bind(consumerQueueFirst)
+                .to(topicExchange)
+                .with("customer.first.archived");
+    }
+
+    @Bean
+    public Binding bindingSecond(TopicExchange topicExchange,
+                                 Queue consumerQueueSecond) {
+        return BindingBuilder
+                .bind(consumerQueueSecond)
+                .to(topicExchange)
+                .with("customer.next.*");
     }
 
     @Bean
@@ -53,24 +83,12 @@ public class Config {
     }
 
     @Bean
-    public Binding bindingFirst(FanoutExchange fanout,
-                            Queue consumerQueueFirst) {
-        return BindingBuilder.bind(consumerQueueFirst).to(fanout);
-    }
-
-    @Bean
-    public Binding bindingSecond(FanoutExchange fanout,
-                            Queue consumerQueueSecond) {
-        return BindingBuilder.bind(consumerQueueSecond).to(fanout);
-    }
-
-    @Bean
     CommandLineRunner initDatabase(ProductRepository productRepository) {
         return args -> {
             var product1 = productRepository.save(
                     new Product(null,
                             "Rice",
-                            "20kg",
+                            20,
                             "Archived"
                     )
             );
@@ -78,7 +96,7 @@ public class Config {
             var product2 = productRepository.save(
                     new Product(null,
                             "Buckwheat",
-                            "10kg",
+                            10,
                             "Archived"
                     )
             );
@@ -86,7 +104,7 @@ public class Config {
             var product3 = productRepository.save(
                     new Product(null,
                             "Oatmeal",
-                            "15kg",
+                            15,
                             "Archived"
                     )
             );
@@ -94,7 +112,7 @@ public class Config {
             var product4 = productRepository.save(
                     new Product(null,
                             "Millet",
-                            "5kg",
+                            5,
                             "Archived"
                     )
             );
@@ -102,7 +120,7 @@ public class Config {
             var product5 = productRepository.save(
                     new Product(null,
                             "Lentils",
-                            "10kg",
+                            10,
                             "Archived"
                     )
             );

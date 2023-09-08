@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(id)
                 .map(currentProduct -> {
                     currentProduct.setName(product.getName());
-                    currentProduct.setValue(product.getValue());
+                    currentProduct.setWeight(product.getWeight());
                     currentProduct.setStatus(product.getStatus());
                     return productRepository.save(currentProduct);
                 })
@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
     public Product sendProduct(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         if (!product.getStatus().equals("Done")) {
-            publishService.send(product.getId() + " " + product.getName() + " " + product.getValue());
+            publishService.send(product);
             product.setStatus("Done");
             updateProduct(product);
         }
@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
         return ((List<Product>) productRepository.findAll()).stream()
                 .filter(product -> !product.getStatus().equals("Done"))
                 .peek(product -> {
-                    publishService.send(product.getId() + " " +product.getName() + " " + product.getValue());
+                    publishService.send(product);
                     product.setStatus("Done");
                     updateProduct(product);
                 })

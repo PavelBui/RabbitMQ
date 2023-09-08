@@ -4,12 +4,12 @@ public class ProductMessage {
 
     private final Long id;
     private final String name;
-    private String value;
+    private final int weight;
 
-    public ProductMessage(Long id, String name, String value) {
+    public ProductMessage(Long id, String name, int weight) {
         this.id = id;
         this.name = name;
-        this.value = value;
+        this.weight = weight;
     }
 
     public Long getId() {
@@ -20,12 +20,8 @@ public class ProductMessage {
         return name;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
+    public int getWeight() {
+        return weight;
     }
 
     @Override
@@ -33,7 +29,7 @@ public class ProductMessage {
         return '{' +
                "id=" + id +
                ", name=" + name +
-               ", value=" + value +
+               ", weight=" + weight +
                '}';
     }
 
@@ -42,6 +38,6 @@ public class ProductMessage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProductMessage product = (ProductMessage) o;
-        return id.equals(product.id) && name.equals(product.name) && value.equals(product.value);
+        return id.equals(product.id) && name.equals(product.name) && weight == product.weight;
     }
 }

@@ -13,6 +13,7 @@ public class ProductToProductResponseDtoConverter implements Converter<Product, 
     public ProductResponseDto convert(Product product) {
         ProductResponseDto productResponseDto = new ProductResponseDto();
         BeanUtils.copyProperties(product, productResponseDto);
+        productResponseDto.setWeight(String.valueOf(product.getWeight()));
         return productResponseDto;
     }
 }
