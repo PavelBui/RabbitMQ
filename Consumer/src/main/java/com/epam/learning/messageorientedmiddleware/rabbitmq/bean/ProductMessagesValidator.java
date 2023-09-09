@@ -24,7 +24,7 @@ public class ProductMessagesValidator {
     }
 
     public int increaseAttemptsNumber() {
-        return ++attemptsNumber;
+        return attemptsNumber++;
     }
 
 }
