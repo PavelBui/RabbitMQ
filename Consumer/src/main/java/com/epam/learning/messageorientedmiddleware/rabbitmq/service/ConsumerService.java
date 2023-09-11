@@ -32,38 +32,24 @@ public class ConsumerService {
     private int queueAskingLimit;
 
     private static final Map<Long, ProductMessagesValidator> productMessagesValidatorMap = new HashMap<>();
-    {
-        productMessagesValidatorMap.put(0L, new ProductMessagesValidator(null));
-    }
 
     @RabbitListener(queues = "${spring.rabbitmq.consumer-queue-first}", containerFactory = "rabbitFactory")
-    public void receiveFirst(String in, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws InterruptedException, IOException {
-        System.out.println("First instance received '" + in + "'");
-        ProductMessage productMessage = createProductMessage(in, channel, tag);
+    public void receiveFirst(ProductMessage productMessage, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws InterruptedException, IOException {
+        System.out.println("First instance received '" + productMessage + "'");
         analyzeMessage(productMessage, channel, tag);
     }
 
     @RabbitListener(queues = "${spring.rabbitmq.consumer-queue-second}", containerFactory = "rabbitFactory")
-    public void receiveSecond(String in, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws InterruptedException, IOException {
-        System.out.println("Second instance received '" + in + "'");
-        ProductMessage productMessage = createProductMessage(in, channel, tag);
+    public void receiveSecond(ProductMessage productMessage, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws InterruptedException, IOException {
+        System.out.println("Second instance received '" + productMessage + "'");
         analyzeMessage(productMessage, channel, tag);
-    }
-
-    private ProductMessage createProductMessage(String message, Channel channel, long tag) throws IOException {
-        String[] messageParts = message.split(" ");
-        if (messageParts.length != 3) {
-            channel.basicNack(tag, false, true);
-        }
-        return new ProductMessage(Long.parseLong(messageParts[0]), messageParts[1], Integer.parseInt(messageParts[2]));
-
     }
 
     private void analyzeMessage(ProductMessage productMessage, Channel channel, long tag) throws InterruptedException, IOException {
         Long productId = productMessage.getId();
         String name = productMessage.getName();
         int weight = productMessage.getWeight();
-        if (weight <= 0 || weight > 100) {
+        if (name.isEmpty() || weight <= 0) {
             if (!productMessagesValidatorMap.containsKey(productId)) {
                 productMessagesValidatorMap.put(productId, new ProductMessagesValidator(productMessage));
             }
@@ -82,9 +68,7 @@ public class ConsumerService {
             }
         } else {
             System.out.println("Client received success message '" + productMessage + "'");
-            if (productMessagesValidatorMap.containsKey(productId)) {
-                productMessagesValidatorMap.remove(productId);
-            }
+            productMessagesValidatorMap.remove(productId);
             channel.basicAck(tag, false);
         }
     }

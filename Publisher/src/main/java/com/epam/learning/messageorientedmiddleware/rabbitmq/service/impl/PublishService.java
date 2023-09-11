@@ -1,5 +1,6 @@
 package com.epam.learning.messageorientedmiddleware.rabbitmq.service.impl;
 
+import com.epam.learning.messageorientedmiddleware.rabbitmq.bean.ProductMessage;
 import com.epam.learning.messageorientedmiddleware.rabbitmq.model.Product;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -17,11 +18,11 @@ public class PublishService {
     private TopicExchange topicExchange;
 
     public void send(Product product) {
-        String message = product.getId() + " " + product.getName() + " " + product.getWeight();
+        ProductMessage productMessage = new ProductMessage(product);
         String key = getKey(product.getStatus());
         CorrelationData correlationData = new CorrelationData(String.valueOf(product.getId()));
-        template.convertAndSend(topicExchange.getName(), key, message, correlationData);
-        System.out.println("Sent '" + message + "'");
+        template.convertAndSend(topicExchange.getName(), key, productMessage, correlationData);
+        System.out.println("Sent '" + productMessage + "'");
     }
 
     private String getKey(String productStatus) {

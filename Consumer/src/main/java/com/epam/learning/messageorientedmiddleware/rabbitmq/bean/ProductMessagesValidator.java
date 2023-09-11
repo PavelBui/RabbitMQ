@@ -16,4 +16,8 @@ public class ProductMessagesValidator {
         this.attemptsNumber = 0;
     }
 
+    public void increaseAttemptsNumber() {
+        attemptsNumber++;
+    }
+
 }

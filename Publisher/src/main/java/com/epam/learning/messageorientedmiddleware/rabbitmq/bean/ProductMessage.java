@@ -1,15 +1,22 @@
 package com.epam.learning.messageorientedmiddleware.rabbitmq.bean;
 
-import lombok.AllArgsConstructor;
+import com.epam.learning.messageorientedmiddleware.rabbitmq.model.Product;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-@AllArgsConstructor
+@Setter
 public class ProductMessage {
 
-    private final Long id;
-    private final String name;
-    private final int weight;
+    private Long id;
+    private String name;
+    private int weight;
+
+    public ProductMessage(Product product) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.weight = product.getWeight();
+    }
 
     @Override
     public String toString() {
