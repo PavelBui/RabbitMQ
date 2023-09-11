@@ -1,5 +1,10 @@
 package com.epam.learning.messageorientedmiddleware.rabbitmq.bean;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ProductMessagesValidator {
 
     private ProductMessage productMessage;
@@ -9,22 +14,6 @@ public class ProductMessagesValidator {
     public ProductMessagesValidator(ProductMessage productMessage) {
         this.productMessage = productMessage;
         this.attemptsNumber = 0;
-    }
-
-    public ProductMessage getProductMessage() {
-        return productMessage;
-    }
-
-    public void setProductMessage(ProductMessage productMessage) {
-        this.productMessage = productMessage;
-    }
-
-    public int getAttemptsNumber() {
-        return attemptsNumber;
-    }
-
-    public int increaseAttemptsNumber() {
-        return attemptsNumber++;
     }
 
 }
