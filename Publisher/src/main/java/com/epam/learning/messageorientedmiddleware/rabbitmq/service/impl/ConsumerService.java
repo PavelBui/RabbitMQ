@@ -1,5 +1,6 @@
 package com.epam.learning.messageorientedmiddleware.rabbitmq.service.impl;
 
+import com.epam.learning.messageorientedmiddleware.rabbitmq.bean.ProductMessage;
 import com.epam.learning.messageorientedmiddleware.rabbitmq.exception.ProductNotFoundException;
 import com.epam.learning.messageorientedmiddleware.rabbitmq.model.Product;
 import com.epam.learning.messageorientedmiddleware.rabbitmq.service.ProductService;
@@ -22,19 +23,13 @@ public class ConsumerService {
         productService.updateProduct(product);
     }
 
-    @RabbitListener(queues = "${spring.rabbitmq.dead-letter-queue}")
-    public void receiveDeadMessage(String in) {
-        System.out.println("Dead message is: '" + in + "'");
-        Long id = getIdFromMessage(in);
+    @RabbitListener(queues = "${spring.rabbitmq.dead-letter-queue}", containerFactory = "rabbitFactory")
+    public void receiveDeadMessage(ProductMessage productMessage) {
+        System.out.println("Dead message is: '" + productMessage + "'");
+        Long id = productMessage.getId();
         Product product = productService.getProduct(id).orElseThrow(() -> new ProductNotFoundException(id));
         product.setStatus("Returned");
         productService.updateProduct(product);
-    }
-
-    private Long getIdFromMessage(String message) {
-        String[] messageParts = message.split(" ");
-        return Long.valueOf(messageParts[0]);
-
     }
 
 }

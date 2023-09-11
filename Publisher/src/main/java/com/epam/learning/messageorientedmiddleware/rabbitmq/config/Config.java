@@ -3,8 +3,10 @@ package com.epam.learning.messageorientedmiddleware.rabbitmq.config;
 import com.epam.learning.messageorientedmiddleware.rabbitmq.model.Product;
 import com.epam.learning.messageorientedmiddleware.rabbitmq.repository.ProductRepository;
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -25,6 +27,14 @@ public class Config {
 
     @Value("${spring.rabbitmq.dead-letter-queue}")
     private String deadLetterQueue;
+
+    @Bean
+    public RabbitListenerContainerFactory<?> rabbitFactory(ConnectionFactory connectionFactory) {
+        var factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setMessageConverter(new Jackson2JsonMessageConverter());
+        return factory;
+    }
 
     @Bean
     RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {

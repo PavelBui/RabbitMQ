@@ -60,6 +60,7 @@ public class ConsumerService {
                 String message = productId.toString();
                 this.template.convertAndSend(failedMessageQueue.getName(), message);
                 System.out.println("Sent to failed message queue '" + message + "'");
+                productMessagesValidatorMap.remove(productId);
                 channel.basicAck(tag, false);
             } else {
                 System.out.println("Message '" + productMessage + "' is failed. Sent acknowledge attempt " + attempt + " of " + queueAskingLimit);
