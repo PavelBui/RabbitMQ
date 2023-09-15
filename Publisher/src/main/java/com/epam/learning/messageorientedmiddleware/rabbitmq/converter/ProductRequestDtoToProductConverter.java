@@ -6,8 +6,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-
 @Component
 public class ProductRequestDtoToProductConverter implements Converter<ProductRequestDto, Product> {
 
